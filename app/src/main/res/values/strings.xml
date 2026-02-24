@@ -23,4 +23,6 @@
     <string name="permiso_telefono">Teléfono</string>
     <string name="permiso_notificaciones">Notificaciones</string>
     <string name="permiso_bateria">Batería (Sin optimizar)</string>
+    <string name="emergency_flow_running">Enviando alertas de emergencia…</string>
+    <string name="emergency_channel_name">Emergencia activa</string>
 </resources>
