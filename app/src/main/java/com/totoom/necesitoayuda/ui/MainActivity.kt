@@ -1,11 +1,20 @@
 package com.totoom.necesitoayuda.ui
 
+import android.content.Intent
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.MotionEvent
+import androidx.appcompat.app.AppCompatActivity
+import com.totoom.necesitoayuda.R
 import com.totoom.necesitoayuda.data.Contact
 import com.totoom.necesitoayuda.data.DatabaseProvider
+import com.totoom.necesitoayuda.databinding.ActivityMainBinding
+import com.totoom.necesitoayuda.databinding.ItemContactCardBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,9 +30,25 @@ class MainActivity : AppCompatActivity() {
         checkFirstRun()
     }
 
+    private fun setupButtons() {
+        binding.btnAyudaRapida.setOnClickListener {
+            startEmergency(getString(R.string.ayuda_rapida), "", 3)
+        }
+
+        binding.btn112.setOnClickListener {
+            startEmergency("112", "112", 5)
+        }
+
+        binding.btnMedico.setOnClickListener {
+            startEmergency(getString(R.string.medico), "123456789", 3)
+        }
+
+        setupSettingsLongPress()
+    }
+
     private fun checkFirstRun() {
-        // Logic to check if permissions or contacts are missing
-        // If so, redirect to PermissionsActivity or show a message
+        // Kept intentionally simple in this iteration to avoid confusing forced navigation.
+        // Permissions readiness can be enforced in a dedicated incremental task.
     }
 
     private fun observeContacts() {
@@ -53,31 +78,16 @@ class MainActivity : AppCompatActivity() {
         container.removeAllViews()
 
         contacts.forEach { contact ->
-            val cardView = layoutInflater.inflate(com.totoom.necesitoayuda.R.layout.item_contact_card, container, false)
-            val binding = com.totoom.necesitoayuda.databinding.ItemContactCardBinding.bind(cardView)
-            binding.tvContactName.text = contact.name
-            binding.tvContactPhone.text = contact.phone
-            // Handle image if present...
-            
+            val cardView = layoutInflater.inflate(R.layout.item_contact_card, container, false)
+            val itemBinding = ItemContactCardBinding.bind(cardView)
+            itemBinding.tvContactName.text = contact.name
+            itemBinding.tvContactPhone.text = contact.phone
+
             cardView.setOnClickListener {
                 startEmergency(contact.name, contact.phone, 3)
             }
             container.addView(cardView)
         }
-    }
-        binding.btnAyudaRapida.setOnClickListener {
-            startEmergency("AYUDA RÁPIDA", "", 3)
-        }
-
-        binding.btn112.setOnClickListener {
-            startEmergency("112", "112", 5)
-        }
-
-        binding.btnMedico.setOnClickListener {
-            startEmergency("MÉDICO", "123456789", 3) // Mock doctor phone
-        }
-
-        setupSettingsLongPress()
     }
 
     private fun setupSettingsLongPress() {
@@ -96,17 +106,14 @@ class MainActivity : AppCompatActivity() {
                     isLongPressing = true
                     handler.postDelayed(longPressRunnable, 5000)
                 }
+
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     isLongPressing = false
                     handler.removeCallbacks(longPressRunnable)
                 }
             }
-            true // Consume event
+            true
         }
-    }
-
-    private fun setupFakeContacts() {
-        // Removed as replaced by observeContacts
     }
 
     private fun startEmergency(name: String, phone: String, seconds: Long) {
