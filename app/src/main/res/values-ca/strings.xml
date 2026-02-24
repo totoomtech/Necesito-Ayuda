@@ -23,4 +23,8 @@
     <string name="permiso_telefono">Telèfon</string>
     <string name="permiso_notificaciones">Notificacions</string>
     <string name="permiso_bateria">Bateria (Sense optimitzar)</string>
+    <string name="permisos_descripcion">Activa els permisos per demanar ajuda sense errors.</string>
+    <string name="permisos_estado_info">Verd = llest. Vermell = falta activar.</string>
+    <string name="permisos_estado_listo">● LLEST</string>
+    <string name="permisos_estado_no_listo">● NO LLEST</string>
 </resources>

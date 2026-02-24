@@ -23,4 +23,8 @@
     <string name="permiso_telefono">Phone</string>
     <string name="permiso_notificaciones">Notifications</string>
     <string name="permiso_bateria">Battery (No optimization)</string>
+    <string name="permisos_descripcion">Turn on permissions so help works every time.</string>
+    <string name="permisos_estado_info">Green = ready. Red = not ready.</string>
+    <string name="permisos_estado_listo">● READY</string>
+    <string name="permisos_estado_no_listo">● NOT READY</string>
 </resources>

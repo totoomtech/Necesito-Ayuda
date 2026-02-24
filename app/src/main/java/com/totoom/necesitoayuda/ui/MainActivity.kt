@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,8 +48,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkFirstRun() {
-        // Logic to check if permissions or contacts are missing
-        // If so, redirect to PermissionsActivity or show a message
+        val db = DatabaseProvider.getDatabase(this)
+        CoroutineScope(Dispatchers.Main).launch {
+            val settings = withContext(Dispatchers.IO) { db.appDao().getSettings() }
+            val permissionsReady = settings?.hasCompletedPermissions == true
+            if (!permissionsReady) {
+                startActivity(Intent(this@MainActivity, PermissionsActivity::class.java))
+            }
+        }
     }
 
     private fun observeContacts() {
