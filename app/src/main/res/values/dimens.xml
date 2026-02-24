@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="min_touch_target">72dp</dimen>
+    <dimen name="emergency_button_height">120dp</dimen>
+    <dimen name="contact_card_height">100dp</dimen>
+</resources>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Necessito Ajuda</string>
+    <string name="ayuda_rapida">AJUDA RÀPIDA</string>
+    <string name="emergencia_112">112</string>
+    <string name="medico">METGE</string>
+    <string name="configuracion">Configuració</string>
+    <string name="permisos">Permisos</string>
+    <string name="activar_permisos">ACTIVAR PERMISOS</string>
+    <string name="cancelar">CANCEL·LAR</string>
+    <string name="volver">TORNAR</string>
+    <string name="guardar_cambios">GUARDAR CANVIS</string>
+    <string name="idioma">Idioma</string>
+    <string name="contactos_principales">Contactes principals</string>
+    <string name="ubicacion_activada">Ubicació activada</string>
+    <string name="sms_msg">Necessito ajuda. La meva ubicació: https://maps.google.com/?q=%1$s,%2$s</string>
+    <string name="enviando_ayuda_a">Enviant ajuda a %1$s</string>
+    <string name="activado">Activat</string>
+    <string name="desactivado">Desactivat</string>
+    <string name="confirmar_112">Confirmar trucada al 112?</string>
+    <string name="permiso_ubicacion">Ubicació</string>
+    <string name="permiso_sms">SMS</string>
+    <string name="permiso_telefono">Telèfon</string>
+    <string name="permiso_notificaciones">Notificacions</string>
+    <string name="permiso_bateria">Bateria (Sense optimitzar)</string>
+</resources>
