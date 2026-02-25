@@ -23,6 +23,14 @@
     <string name="permiso_telefono">Telèfon</string>
     <string name="permiso_notificaciones">Notificacions</string>
     <string name="permiso_bateria">Bateria (Sense optimitzar)</string>
+    <string name="about">Sobre l'app</string>
+    <string name="about_title">Necesito Ayuda</string>
+    <string name="about_description">Aplicació d'assistència d'emergència creada per ajudar persones grans o vulnerables a demanar ajuda ràpidament en situacions difícils.
+
+Sense publicitat.
+Sense recopilació de dades.
+Sense seguiment.
+Funciona només per ajudar a contactar cuidadors de confiança.</string>
     <string name="permisos_descripcion">Activa els permisos per demanar ajuda sense errors.</string>
     <string name="permisos_estado_info">Verd = llest. Vermell = falta activar.</string>
     <string name="permisos_estado_listo">● LLEST</string>

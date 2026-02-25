@@ -2,16 +2,16 @@ package com.totoom.necesitoayuda.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
-import com.totoom.necesitoayuda.data.DatabaseProvider
 import com.totoom.necesitoayuda.data.Contact
+import com.totoom.necesitoayuda.data.DatabaseProvider
 import com.totoom.necesitoayuda.databinding.ActivitySettingsBinding
+import com.totoom.necesitoayuda.databinding.ItemSettingsContactBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.first
-import android.view.LayoutInflater
-import com.totoom.necesitoayuda.databinding.ItemSettingsContactBinding
+import kotlinx.coroutines.launch
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -23,9 +23,13 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.ivBack.setOnClickListener { finish() }
-        
+
         binding.btnPermissionsShortcut.setOnClickListener {
             startActivity(Intent(this, PermissionsActivity::class.java))
+        }
+
+        binding.btnAbout.setOnClickListener {
+            startActivity(Intent(this, AboutActivity::class.java))
         }
 
         loadData()
@@ -48,10 +52,10 @@ class SettingsActivity : AppCompatActivity() {
             val itemBinding = ItemSettingsContactBinding.inflate(inflater, container, true)
             itemBinding.etName.setText(contact.name)
             itemBinding.etPhone.setText(contact.phone)
-            
+
             itemBinding.btnSaveContact.setOnClickListener {
-                val newName = itemBinding.etName.text.toString()
-                val newPhone = itemBinding.etPhone.text.toString()
+                val newName = itemBinding.etName.text?.toString().orEmpty()
+                val newPhone = itemBinding.etPhone.text?.toString().orEmpty()
                 saveContact(contact.copy(name = newName, phone = newPhone))
             }
         }

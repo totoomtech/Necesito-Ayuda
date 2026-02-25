@@ -31,17 +31,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupButtons() {
+
+=======
         // AYUDA RÁPIDA (required by mockup)
+
         binding.btnAyudaRapida.setOnClickListener {
             startEmergency(getString(R.string.ayuda_rapida), "", 3)
         }
 
+
         // 112 (5s + confirmation handled in CountdownActivity)
+
         binding.btn112.setOnClickListener {
             startEmergency("112", "112", 5)
         }
 
+
+
         // MÉDICO (phone must be configurable later; keep placeholder for now)
+
         binding.btnMedico.setOnClickListener {
             startEmergency(getString(R.string.medico), "123456789", 3)
         }
@@ -50,6 +58,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkFirstRun() {
+
+        // Kept intentionally simple in this iteration to avoid confusing forced navigation.
+        // Permissions readiness can be enforced in a dedicated incremental task.
         // Intentionally minimal to avoid forced navigation.
         // Permissions readiness enforcement will be handled in Permissions flow.
     }
@@ -81,6 +92,17 @@ class MainActivity : AppCompatActivity() {
         container.removeAllViews()
 
         contacts.forEach { contact ->
+
+            val cardView = layoutInflater.inflate(R.layout.item_contact_card, container, false)
+            val itemBinding = ItemContactCardBinding.bind(cardView)
+            itemBinding.tvContactName.text = contact.name
+            itemBinding.tvContactPhone.text = contact.phone
+
+            cardView.setOnClickListener {
+                startEmergency(contact.name, contact.phone, 3)
+            }
+            container.addView(cardView)
+
             val rowView = layoutInflater.inflate(R.layout.item_contact_card, container, false)
             val itemBinding = ItemContactCardBinding.bind(rowView)
 
@@ -113,6 +135,7 @@ class MainActivity : AppCompatActivity() {
                     isLongPressing = true
                     handler.postDelayed(longPressRunnable, 5000)
                 }
+
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                     isLongPressing = false
                     handler.removeCallbacks(longPressRunnable)

@@ -42,6 +42,11 @@
             android:name=".ui.SettingsActivity"
             android:exported="false" />
 
+
+        <activity
+            android:name=".ui.AboutActivity"
+
+=======
         <service
             android:name=".service.EmergencyForegroundService"
             android:exported="false"

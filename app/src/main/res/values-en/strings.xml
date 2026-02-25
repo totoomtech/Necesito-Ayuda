@@ -23,6 +23,15 @@
     <string name="permiso_telefono">Phone</string>
     <string name="permiso_notificaciones">Notifications</string>
     <string name="permiso_bateria">Battery (No optimization)</string>
+    <string name="about">About</string>
+    <string name="about_title">Necesito Ayuda</string>
+    <string name="about_description">Emergency assistance application created to help elderly or vulnerable people request help quickly in difficult situations.
+
+No advertising.
+No data collection.
+No tracking.
+Works only to help people contact trusted caregivers.</string>
+=======
     <string name="permisos_descripcion">Turn on permissions so help works every time.</string>
     <string name="permisos_estado_info">Green = ready. Red = not ready.</string>
     <string name="permisos_estado_listo">● READY</string>
