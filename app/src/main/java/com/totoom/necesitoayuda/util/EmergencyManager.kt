@@ -5,37 +5,36 @@ import android.content.Intent
 import android.net.Uri
 import android.telephony.SmsManager
 import android.util.Log
-import com.totoom.necesitoayuda.R
-import kotlinx.coroutines.*
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import com.totoom.necesitoayuda.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.coroutines.resume
 
 class EmergencyManager(private val context: Context) {
 
-    private val TAG = "NECESITO_AYUDA"
+    private val tag = "NECESITO_AYUDA"
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
-    fun executeFullEmergencyFlow(targetPhone: String, allContactPhones: List<String>) {
-        CoroutineScope(Dispatchers.IO).launch {
-            Log.d(TAG, "Executing Full Emergency Flow")
-            
-            // 1. Get Location (with timeout and fallback)
-            val location = getBestLocation()
-            val lat = location?.latitude ?: 0.0
-            val lon = location?.longitude ?: 0.0
+    suspend fun executeFullEmergencyFlow(targetPhone: String, allContactPhones: List<String>) {
+        Log.d(tag, "Executing Full Emergency Flow")
 
-            // 2. Send SMS to all 3 contacts
-            sendSmsToAll(lat, lon, allContactPhones)
+        val location = getBestLocation()
+        val lat = location?.latitude ?: 0.0
+        val lon = location?.longitude ?: 0.0
 
-            // 3. Open WhatsApp (Prefilled)
-            withContext(Dispatchers.Main) {
-                openWhatsApp(lat, lon, targetPhone)
-            }
+        sendSmsToAll(lat, lon, allContactPhones)
 
-            // 4. Start Call Cascade
-            delay(2000) 
-            startCallCascade(listOf(targetPhone) + (allContactPhones.filter { it != targetPhone }))
+        withContext(Dispatchers.Main) {
+            openWhatsApp(lat, lon, targetPhone)
         }
+
+        delay(2000)
+        startCallCascade(listOf(targetPhone) + allContactPhones.filter { it != targetPhone })
     }
 
     private suspend fun getBestLocation(): android.location.Location? {
@@ -47,7 +46,7 @@ class EmergencyManager(private val context: Context) {
                         .addOnFailureListener { continuation.resume(null) {} }
                 }
             } ?: run {
-                Log.d(TAG, "Location timeout, falling back to last known")
+                Log.d(tag, "Location timeout, falling back to last known")
                 suspendCancellableCoroutine { continuation ->
                     fusedLocationClient.lastLocation
                         .addOnSuccessListener { location -> continuation.resume(location) {} }
@@ -55,27 +54,27 @@ class EmergencyManager(private val context: Context) {
                 }
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Location error", e)
+            Log.e(tag, "Location error", e)
             null
         }
     }
 
     private fun sendSmsToAll(lat: Double, lon: Double, phoneNumbers: List<String>) {
-        Log.d(TAG, "Step 2: Sending SMS to all contacts")
+        Log.d(tag, "Step 2: Sending SMS to all contacts")
         val message = context.getString(R.string.sms_msg, lat, lon)
         val smsManager = context.getSystemService(SmsManager::class.java)
         phoneNumbers.forEach { phone ->
             try {
                 smsManager.sendTextMessage(phone, null, message, null, null)
-                Log.d(TAG, "SMS sent to $phone")
+                Log.d(tag, "SMS sent to $phone")
             } catch (e: Exception) {
-                Log.e(TAG, "Failed send SMS to $phone", e)
+                Log.e(tag, "Failed send SMS to $phone", e)
             }
         }
     }
 
-    fun openWhatsApp(lat: Double, lon: Double, targetPhone: String) {
-        Log.d(TAG, "Step 3: Opening WhatsApp")
+    private fun openWhatsApp(lat: Double, lon: Double, targetPhone: String) {
+        Log.d(tag, "Step 3: Opening WhatsApp")
         val message = context.getString(R.string.sms_msg, lat, lon)
         val intent = Intent(Intent.ACTION_VIEW).apply {
             data = Uri.parse("https://api.whatsapp.com/send?phone=$targetPhone&text=${Uri.encode(message)}")
@@ -84,19 +83,19 @@ class EmergencyManager(private val context: Context) {
         try {
             context.startActivity(intent)
         } catch (e: Exception) {
-            Log.e(TAG, "WhatsApp error", e)
+            Log.e(tag, "WhatsApp error", e)
         }
     }
 
-    fun startCallCascade(targetPhones: List<String>) {
-        Log.d(TAG, "Step 4: Starting Call Cascade")
-        CoroutineScope(Dispatchers.Main).launch {
-            for (phone in targetPhones) {
-                if (phone.isBlank()) continue
-                Log.d(TAG, "Calling $phone...")
+    private suspend fun startCallCascade(targetPhones: List<String>) {
+        Log.d(tag, "Step 4: Starting Call Cascade")
+        targetPhones.forEach { phone ->
+            if (phone.isBlank()) return@forEach
+            Log.d(tag, "Calling $phone...")
+            withContext(Dispatchers.Main) {
                 makePhoneCall(phone)
-                delay(15000) 
             }
+            delay(15000)
         }
     }
 
@@ -108,7 +107,7 @@ class EmergencyManager(private val context: Context) {
         try {
             context.startActivity(intent)
         } catch (e: Exception) {
-            Log.e(TAG, "Call error", e)
+            Log.e(tag, "Call error", e)
         }
     }
 }
