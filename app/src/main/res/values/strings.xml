@@ -31,4 +31,11 @@ Sin publicidad.
 Sin recopilación de datos.
 Sin seguimiento.
 Funciona solo para ayudar a contactar con cuidadores de confianza.</string>
+=======
+    <string name="emergency_flow_running">Enviando alertas de emergencia…</string>
+    <string name="emergency_channel_name">Emergencia activa</string>
+    <string name="permisos_descripcion">Activa los permisos para pedir ayuda sin fallos.</string>
+    <string name="permisos_estado_info">Verde = listo. Rojo = falta activar.</string>
+    <string name="permisos_estado_listo">● LISTO</string>
+    <string name="permisos_estado_no_listo">● NO LISTO</string>
 </resources>

@@ -31,13 +31,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupButtons() {
+
+=======
+        // AYUDA RÁPIDA (required by mockup)
+
         binding.btnAyudaRapida.setOnClickListener {
             startEmergency(getString(R.string.ayuda_rapida), "", 3)
         }
 
+
+        // 112 (5s + confirmation handled in CountdownActivity)
+
         binding.btn112.setOnClickListener {
             startEmergency("112", "112", 5)
         }
+
+
+
+        // MÉDICO (phone must be configurable later; keep placeholder for now)
 
         binding.btnMedico.setOnClickListener {
             startEmergency(getString(R.string.medico), "123456789", 3)
@@ -47,8 +58,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkFirstRun() {
+
         // Kept intentionally simple in this iteration to avoid confusing forced navigation.
         // Permissions readiness can be enforced in a dedicated incremental task.
+        // Intentionally minimal to avoid forced navigation.
+        // Permissions readiness enforcement will be handled in Permissions flow.
     }
 
     private fun observeContacts() {
@@ -56,7 +70,7 @@ class MainActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.Main).launch {
             db.appDao().getTopContacts().collectLatest { contacts ->
                 if (contacts.isEmpty()) {
-                    setupInitialFakeData()
+                    seedInitialContacts()
                 } else {
                     updateContactUI(contacts)
                 }
@@ -64,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupInitialFakeData() {
+    private fun seedInitialContacts() {
         val db = DatabaseProvider.getDatabase(this)
         CoroutineScope(Dispatchers.IO).launch {
             db.appDao().insertContact(Contact(1, "Hijo", "+34 611 567 890", null, 0))
@@ -78,6 +92,7 @@ class MainActivity : AppCompatActivity() {
         container.removeAllViews()
 
         contacts.forEach { contact ->
+
             val cardView = layoutInflater.inflate(R.layout.item_contact_card, container, false)
             val itemBinding = ItemContactCardBinding.bind(cardView)
             itemBinding.tvContactName.text = contact.name
@@ -87,12 +102,26 @@ class MainActivity : AppCompatActivity() {
                 startEmergency(contact.name, contact.phone, 3)
             }
             container.addView(cardView)
+
+            val rowView = layoutInflater.inflate(R.layout.item_contact_card, container, false)
+            val itemBinding = ItemContactCardBinding.bind(rowView)
+
+            itemBinding.tvContactName.text = contact.name
+            itemBinding.tvContactPhone.text = contact.phone
+            // TODO: set photo if present
+
+            rowView.setOnClickListener {
+                startEmergency(contact.name, contact.phone, 3)
+            }
+
+            container.addView(rowView)
         }
     }
 
     private fun setupSettingsLongPress() {
         val handler = Handler(Looper.getMainLooper())
         var isLongPressing = false
+
         val longPressRunnable = Runnable {
             if (isLongPressing) {
                 startActivity(Intent(this, SettingsActivity::class.java))

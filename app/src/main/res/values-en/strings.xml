@@ -31,4 +31,9 @@ No advertising.
 No data collection.
 No tracking.
 Works only to help people contact trusted caregivers.</string>
+=======
+    <string name="permisos_descripcion">Turn on permissions so help works every time.</string>
+    <string name="permisos_estado_info">Green = ready. Red = not ready.</string>
+    <string name="permisos_estado_listo">● READY</string>
+    <string name="permisos_estado_no_listo">● NOT READY</string>
 </resources>

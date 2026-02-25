@@ -1,6 +1,7 @@
 package com.totoom.necesitoayuda.ui
 
 import android.content.Context
+import android.content.Intent
 import android.media.AudioManager
 import android.media.ToneGenerator
 import android.os.*
@@ -12,7 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.totoom.necesitoayuda.R
 import com.totoom.necesitoayuda.data.DatabaseProvider
 import com.totoom.necesitoayuda.databinding.ActivityCountdownBinding
-import com.totoom.necesitoayuda.util.EmergencyManager
+import androidx.core.content.ContextCompat
+import com.totoom.necesitoayuda.service.EmergencyForegroundService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -103,14 +105,17 @@ class CountdownActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private fun triggerEmergencyFlow() {
         Log.d("NECESITO_AYUDA", "Step 0: Countdown finished for $targetName")
-        val emergencyManager = EmergencyManager(this)
         val db = DatabaseProvider.getDatabase(this)
-        
+
         CoroutineScope(Dispatchers.Main).launch {
             val contacts = db.appDao().getTopContacts().first()
-            val allPhones = contacts.map { it.phone }
-            
-            emergencyManager.executeFullEmergencyFlow(targetPhone, allPhones)
+            val allPhones = ArrayList(contacts.map { it.phone })
+
+            val serviceIntent = Intent(this@CountdownActivity, EmergencyForegroundService::class.java).apply {
+                putExtra(EmergencyForegroundService.EXTRA_TARGET_PHONE, targetPhone)
+                putStringArrayListExtra(EmergencyForegroundService.EXTRA_ALL_PHONES, allPhones)
+            }
+            ContextCompat.startForegroundService(this@CountdownActivity, serviceIntent)
             finish()
         }
     }
